@@ -4,7 +4,7 @@ services:
 
     php_apache:
         build: ./docker/php_apache/
-        container_name: feedcheker_phpapache
+        container_name: notfound_phpapache
         ports:
             - 80:80
         volumes:

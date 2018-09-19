@@ -1,19 +1,25 @@
 <?php
-
 use Porte22\NotFound\CheckUrl;
-set_time_limit(300);
-require 'vendor/autoload.php';
+set_time_limit(600);
+require '../vendor/autoload.php';
 
-$checkUrl = new CheckUrl();
-foreach (glob("csv/*.csv") as $filename) {
-    $csv = array_map('str_getcsv', file($filename));
-    $header = array_flip(array_shift($csv));
+$fileBase = '../data/error_' . (new \DateTime())->format('Y-m-d').'_%s.txt';
+//audi,mercedes-benz etc
+$fileErrorMaker = sprintf($fileBase,'maker');
+$fileErrorUnknown = sprintf($fileBase,'unknown');
+$fileMakerList = '../data/makers/list.txt';
+$fixedBase = '../data/fixed_' . (new \DateTime())->format('Y-m-d').'_%s.txt';
 
-    foreach ($csv as $item) {
-        $url = $item[$header['URL']];
-        $checkUrl->analizeUrl($url);
-    }
+$checkUrl = new CheckUrl($fileMakerList);
+
+if (!file_exists($fileErrorMaker)) {
+    $checkUrl->loadUrlInErrorFromCsv("../csv/*.csv", 'URL');
+    $checkUrl->writeUrlInError($fileErrorMaker,$fileErrorUnknown);
 }
+//$checkUrl->showUrlInError($fileErrorMaker);
+//$checkUrl->showUrlInError($fileErrorUnknown);
+$fixedMakerList = $checkUrl->fixMaker($fileErrorMaker,sprintf($fixedBase,'maker'));
+echo "<pre>";
+print_r($fileMakerList);
+echo "</pre>";
 
-//print_r($checkUrl->getList());
-$checkUrl->check();

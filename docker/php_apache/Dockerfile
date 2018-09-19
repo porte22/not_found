@@ -1,8 +1,8 @@
 FROM edimotive/php-apache:7.1
 
-COPY vhost-feedcheker.conf /etc/apache2/sites-available/
+COPY vhost-notfound.conf /etc/apache2/sites-available/
 
-RUN a2ensite vhost-feedcheker
+RUN a2ensite vhost-notfound
 
 WORKDIR /var/www
 
